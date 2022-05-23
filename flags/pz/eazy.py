@@ -86,13 +86,13 @@ class Eazy():
 
     def create_input_catalogue_from_HDF5(self, hf, path = lambda f: f'obs/{f}'):
 
-        N = len(hf.get(f'{path(self.filters[-1])}/flux').value)
+        N = len(hf[f'{path(self.filters[-1])}/flux'][()])
 
         table = {'#id': np.arange(N)}
 
         for i, f in enumerate(self.filters):
-            table['F'+str(i+1)] = hf.get(f'{path(f)}/flux').value
-            table['E'+str(i+1)] = hf.get(f'{path(f)}/flux_err').value
+            table['F'+str(i+1)] = hf[f'{path(f)}/flux'][()]
+            table['E'+str(i+1)] = hf[f'{path(f)}/flux_err'][()]
 
         flatten = lambda l: [item for sublist in l for item in sublist]
         names = ['#id'] + flatten([['F'+str(i+1), 'E'+str(i+1)] for i in range(len(self.filters))])
