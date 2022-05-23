@@ -17,11 +17,12 @@ import flare
 import flare.photom
 import flare.filters
 
+import os
 
 
 class Eazy():
 
-    def __init__(self, id, F, EAZY_working_dir = 'EAZY', path_to_EAZY = flare.FLARE_dir + '/software/eazy-photoz', create_POFZ_FILE = False):
+    def __init__(self, id, F, EAZY_working_dir = 'EAZY', path_to_EAZY = os.getenv('EAZY'), create_POFZ_FILE = False):
 
         self.ID = id
         self.F = F
