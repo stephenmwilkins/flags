@@ -2,22 +2,13 @@
 
 
 import io
-import numpy as np
-
-import h5py
-
 import sys
 import os
-
 import tempfile
-
+import numpy as np
+import h5py
 from astropy.io import ascii
 
-import flare
-import flare.photom
-import flare.filters
-
-import os
 
 
 class Eazy():
