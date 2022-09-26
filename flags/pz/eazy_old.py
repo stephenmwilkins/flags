@@ -22,10 +22,10 @@ import os
 
 class Eazy():
 
-    def __init__(self, id, fc, EAZY_working_dir = 'EAZY', path_to_EAZY = os.getenv('EAZY'), create_POFZ_FILE = False):
+    def __init__(self, id, F, EAZY_working_dir = 'EAZY', path_to_EAZY = os.getenv('EAZY'), create_POFZ_FILE = False):
 
         self.ID = id
-        self.fc = fc
+        self.F = F
 
         # --- create EAZY working directory if it doesn't already exist
 
@@ -51,10 +51,10 @@ class Eazy():
 
         """ Take a flare filter object and create a EAZY RES file """
 
-        self.filters = self.fc.filters
+        self.filters = self.F['filters']
 
         # --- create filter RES file
-        create_EAZY_filter_res(self.fc, filter_res_file = f'{self.EAZY_working_dir}/inputs/{self.ID}.RES')
+        flare.filters.create_EAZY_filter_res(self.F, filter_res_file = f'{self.EAZY_working_dir}/inputs/{self.ID}.RES')
 
 
 
@@ -111,18 +111,7 @@ class Eazy():
 
 
 
-def create_EAZY_filter_res(fc, filter_res_file = 'FILTER.RES'):
 
-    o = []
-
-    for f in fc.filters:
-
-        o.append('{n} {f}\n'.format(n=len(fc.filter[f].lam), f=f)) # filter header
-
-        for i,l in enumerate(fc.filter[f].lam):
-            o.append('{i:>5}   {l}   {t}\n'.format(i=i+1, l=l,t=fc.filter[f].t[i]))
-
-    open(filter_res_file,'w').writelines(o)
 
 
 

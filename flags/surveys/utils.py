@@ -72,3 +72,18 @@ def combine_surveys(name, surveys):
     survey.fields_ = list(survey.fields.values())
 
     return survey
+
+
+def combine_fields(name, surveys, field_list):
+
+    survey = Survey(name)
+
+    for i in field_list:
+        survey_name, field_name = i.split('/')
+        f = surveys[survey_name].fields[field_name]
+        f['name'] = i
+        survey.fields[f'{survey_name}/{field_name}'] = f
+
+    survey.fields_ = list(survey.fields.values())
+
+    return survey

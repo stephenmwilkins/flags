@@ -31,7 +31,16 @@ for log in [False, True]:
     for survey, c, ls in zip(jwst.surveys['Cycle 1'][::-1], cmr.take_cmap_colors('cmr.bubblegum', len(jwst.surveys['Cycle 1']), cmap_range = (0.0,1.0)), ['-','--','-.',':']*4):
         x,y = survey.get_cumulative_area(f)
         if log: y = np.log10(y)
-        ax.plot(x,y,lw=1, ls=ls, alpha = 1.0, label = rf'$\rm {survey.name}$', c=c)
+
+        lw = 1
+        if survey.name == 'PEARLS':
+            ls = '-'
+            lw = 2
+            c = 'g'
+
+
+        ax.plot(x,y,lw=lw, ls=ls, alpha = 1.0, label = rf'$\rm {survey.name}$', c=c)
+
 
 
 

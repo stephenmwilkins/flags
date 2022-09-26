@@ -1,12 +1,13 @@
 
 import numpy as np
-from .utils import Survey, combine_surveys
+from .utils import Survey, combine_surveys, combine_fields
 
 survey = {}
 
 
 # --- simple scenarios
-default_ratio = {'Webb.NIRCAM.F070W': 8.13, 'Webb.NIRCAM.F090W': 6.67, 'Webb.NIRCAM.F115W': 6.08, 'Webb.NIRCAM.F150W': 4.83, 'Webb.NIRCAM.F200W': 3.98, 'Webb.NIRCAM.F277W': 4.70, 'Webb.NIRCAM.F356W':6.58, 'Webb.NIRCAM.F356W': 3.91, 'Webb.NIRCAM.F410M': 7.56, 'Webb.NIRCAM.F444W': 5.95} # 'Hubble.ACS.f814w': 6.08, 
+# default_ratio = {'Webb.NIRCAM.F070W': 8.13, 'Webb.NIRCAM.F090W': 6.67, 'Webb.NIRCAM.F115W': 6.08, 'Webb.NIRCAM.F150W': 4.83, 'Webb.NIRCAM.F200W': 3.98, 'Webb.NIRCAM.F277W': 4.70, 'Webb.NIRCAM.F356W':6.58, 'Webb.NIRCAM.F356W': 3.91, 'Webb.NIRCAM.F410M': 7.56, 'Webb.NIRCAM.F444W': 5.95} # 'Hubble.ACS.f814w': 6.08,
+default_ratio = {'Webb.NIRCAM.F090W': 6.67, 'Webb.NIRCAM.F115W': 6.08, 'Webb.NIRCAM.F150W': 4.83, 'Webb.NIRCAM.F200W': 3.98, 'Webb.NIRCAM.F277W': 4.70, 'Webb.NIRCAM.F356W':6.58, 'Webb.NIRCAM.F356W': 3.91, 'Webb.NIRCAM.F410M': 7.56, 'Webb.NIRCAM.F444W': 5.95} # 'Hubble.ACS.f814w': 6.08,
 survey['fiducial'] = Survey('fiducial')
 for ref_depth_mag, tier in zip([27., 28., 29., 30., 31.], ['ushallow', 'shallow', 'medium', 'deep', 'udeep']):
     depths_mag = {filter: ref_depth_mag - 2.5*np.log10(v/default_ratio['Webb.NIRCAM.F200W']) for filter, v in default_ratio.items()}
@@ -28,15 +29,26 @@ survey['JADES'] = Survey('JADES')
 survey['JADES'].add_field('deep', depths_mag = {'Webb.NIRCAM.F150W': 30.7,  'Webb.NIRCAM.F277W': 30.7, 'Webb.NIRCAM.F200W': 30.7, 'Webb.NIRCAM.F356W': 30.2}, area = 46, depth_reference_filter = 'Webb.NIRCAM.F150W')
 survey['JADES'].add_field('medium', depths_mag = {'Webb.NIRCAM.F150W': 29.7, 'Webb.NIRCAM.F277W': 29.8, 'Webb.NIRCAM.F200W': 29.8, 'Webb.NIRCAM.F356W': 29.4}, area = 144, depth_reference_filter = 'Webb.NIRCAM.F150W')
 
+
+
 # --- CEERS
 survey['CEERS'] = Survey('CEERS')
-survey['CEERS'].add_field('1', depths_mag = {'Webb.NIRCAM.F150W': 28.9, 'Webb.NIRCAM.F200W': 28.95, 'Webb.NIRCAM.F277W': 28.95, 'Webb.NIRCAM.F356W': 28.95}, area = 10.*9.1, depth_reference_filter = 'Webb.NIRCAM.F150W')
+survey['CEERS'].add_field('Epoch-1', depths_mag = {'Webb.NIRCAM.F115W': 29.0, 'Webb.NIRCAM.F150W': 28.9, 'Webb.NIRCAM.F200W': 28.95, 'Webb.NIRCAM.F277W': 28.95, 'Webb.NIRCAM.F356W': 28.95, 'Webb.NIRCAM.F444W': 28.3}, area = 4.*9.1, depth_reference_filter = 'Webb.NIRCAM.F150W')
+survey['CEERS'].add_field('Epoch-2', depths_mag = {'Webb.NIRCAM.F115W': 29.0, 'Webb.NIRCAM.F150W': 28.9, 'Webb.NIRCAM.F200W': 28.95, 'Webb.NIRCAM.F277W': 28.95, 'Webb.NIRCAM.F356W': 28.95, 'Webb.NIRCAM.F444W': 28.3}, area = 6.*9.1, depth_reference_filter = 'Webb.NIRCAM.F150W')
+
 
 # --- PEARLS
 survey['PEARLS'] = Survey('PEARLS')
-survey['PEARLS'].add_field('NEP', depths_mag = {'Webb.NIRCAM.F090W': 28.4, 'Webb.NIRCAM.F115W': 28.6, 'Webb.NIRCAM.F150W': 28.8, 'Webb.NIRCAM.F200W': 28.9, 'Webb.NIRCAM.F277W': 28.5, 'Webb.NIRCAM.F356W': 28.5, 'Webb.NIRCAM.F410M': 27.7, 'Webb.NIRCAM.F444W': 28.00}, area = 54.7, depth_reference_filter = 'Webb.NIRCAM.F150W')
+
+nep_depths = {'Webb.NIRCAM.F090W': 28.4, 'Webb.NIRCAM.F115W': 28.6, 'Webb.NIRCAM.F150W': 28.8, 'Webb.NIRCAM.F200W': 28.9, 'Webb.NIRCAM.F277W': 28.5, 'Webb.NIRCAM.F356W': 28.5, 'Webb.NIRCAM.F410M': 27.7, 'Webb.NIRCAM.F444W': 28.00}
+
+survey['PEARLS'].add_field('NEP', depths_mag = nep_depths, area = 47, depth_reference_filter = 'Webb.NIRCAM.F150W')
+
+survey['PEARLS'].add_field('NEP-overlap', depths_mag = {k:v+0.75 for k, v in nep_depths.items()}, area = 8.324, depth_reference_filter = 'Webb.NIRCAM.F150W')
 
 survey['PEARLS'].add_field('IDF', depths_mag = {'Webb.NIRCAM.F150W': 28.98, 'Webb.NIRCAM.F200W': 29.16, 'Webb.NIRCAM.F356W': 28.83, 'Webb.NIRCAM.F444W': 28.43}, area = 9.1, depth_reference_filter = 'Webb.NIRCAM.F150W') # based on JT's calculations
+
+survey['PEARLS'].add_field('ERS', depths_mag = {k:v-0.75 for k, v in nep_depths.items()}, area = 8.324, depth_reference_filter = 'Webb.NIRCAM.F150W')
 
 # PEARLS.add_field('IDF', depths_mag = {'Webb.NIRCAM.F090W': 28.4, 'Webb.NIRCAM.F115W': 28.6, 'Webb.NIRCAM.F150W': 28.8, 'Webb.NIRCAM.F200W': 28.9, 'Webb.NIRCAM.F277W': 28.5, 'Webb.NIRCAM.F356W': 28.5, 'Webb.NIRCAM.F410M': 27.7, 'Webb.NIRCAM.F444W': 28.00}, area = 9.1, depth_reference_filter = 'Webb.NIRCAM.F150W')
 # PEARLS.add_field('ERS', depths_mag = {'Webb.NIRCAM.F090W': 28.4, 'Webb.NIRCAM.F115W': 28.6, 'Webb.NIRCAM.F150W': 28.8, 'Webb.NIRCAM.F200W': 28.9, 'Webb.NIRCAM.F277W': 28.5, 'Webb.NIRCAM.F356W': 28.5, 'Webb.NIRCAM.F410M': 27.7, 'Webb.NIRCAM.F444W': 28.00}, area = 9.1, depth_reference_filter = 'Webb.NIRCAM.F150W')
@@ -105,13 +117,16 @@ survey['PANORAMIC'].add_field('28', area = 149.6, depths_mag = {'Webb.NIRCAM.F15
 
 # --- lists of surveys
 surveys = {}
-surveys['Public Cycle 1'] = [survey['CEERS'], survey['PEARLS'], survey['COSMOS-Web'], survey['PRIMER'], survey['NGDEEP'], survey['PANORAMIC']]
-surveys['Cycle 1'] = surveys['Public Cycle 1'] + [survey['JADES']]
+surveys['Public Cycle 1'] = [survey['NGDEEP'], survey['PEARLS'], survey['CEERS'], survey['PRIMER'], survey['PANORAMIC'], survey['COSMOS-Web']]
+surveys['Cycle-1'] = surveys['Cycle 1'] = [survey['NGDEEP'], survey['PEARLS'], survey['CEERS'],survey['JADES'], survey['PRIMER'], survey['PANORAMIC'], survey['COSMOS-Web']]
+
+
 
 survey['Public Cycle 1'] = combine_surveys('Public Cycle 1', surveys['Public Cycle 1'])
-survey['Cycle 1'] = combine_surveys('Cycle 1', surveys['Cycle 1'])
+survey['Cycle-1'] = survey['Cycle 1'] = combine_surveys('Cycle-1', surveys['Cycle-1'])
 
+# --- make a sub-survey using a sub-set of fields
 
-
+survey['FLAGS-DR1'] = combine_fields('FLAGS.DR1', survey, ['GLASS/Abell-2744-Parallel', 'CEERS/Epoch-1'])
 
 # surveys['JADES'] = JADES
