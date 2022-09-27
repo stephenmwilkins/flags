@@ -32,7 +32,10 @@ class Eazy():
 
             # --- create symbolic link to templates
         if not os.path.exists(f'templates'):
-            os.symlink(f'{path_to_EAZY}/templates', f'templates')
+            try:
+                os.symlink(f'{path_to_EAZY}/templates', f'templates', target_is_directory = True)
+            except:
+                print('tried to create a templates link')
 
         self.create_param()
         self.create_filter_RES()
